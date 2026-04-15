@@ -7,7 +7,7 @@ from datetime import date, timedelta
 import pandas as pd
 import streamlit as st
 
-# Expect the market-data skill installed at ~/.claude/skills/trading/skills/market-data
+# Expect the market-data skill installed at ~/.claude/skills/trading/skills/trading/market-data
 # Or vendor its fetchers here. For the template we implement a minimal yfinance fetch.
 
 st.set_page_config(page_title="Trading Dashboard", layout="wide")
