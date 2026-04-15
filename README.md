@@ -14,6 +14,7 @@ A collection of Claude Code skills for building trading systems and trading-focu
 | [risk-management](skills/risk-management) | Position sizing, portfolio risk, drawdown control |
 | [trading-app-scaffold](skills/trading-app-scaffold) | Bootstrap trading web dashboards, mobile apps, backends, and CLIs |
 | [app-gap-analysis](skills/app-gap-analysis) | Analyze the top-selling app of the day, extract market gaps from reviews, produce an OpportunityBrief for building a better competitor |
+| [app-marketing](skills/app-marketing) | Market a shipped app — positioning, ASO, launch playbook, analytics instrumentation, reviews, lifecycle email, referrals, landing page |
 
 ## Installing
 
