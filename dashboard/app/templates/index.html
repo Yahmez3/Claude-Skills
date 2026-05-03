@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}TradingAgents Dashboard{% endblock %}
+{% block content %}
+<div class="grid two">
+  <section class="card">
+    <h2>Launch a run</h2>
+    {% if not providers %}
+      <div class="warn">
+        No provider API keys detected in <code>.env</code>. Set at least one (e.g. <code>OPENAI_API_KEY</code>) before launching.
+      </div>
+    {% else %}
+      <div class="hint">Detected providers: {{ providers | join(", ") }}</div>
+    {% endif %}
+    <form method="post" action="/api/runs">
+      <label>Ticker
+        <input name="ticker" required placeholder="NVDA" autocomplete="off" />
+      </label>
+      <label>Trade date
+        <input name="trade_date" type="date" value="{{ today }}" required />
+      </label>
+      <label>LLM provider
+        <select name="llm_provider">
+          {% for p in ["openai", "google", "anthropic", "xai", "deepseek", "qwen", "glm", "openrouter", "ollama"] %}
+            <option value="{{ p }}" {% if p in providers %}{% if loop.first %}selected{% endif %}{% endif %}>{{ p }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <div class="row">
+        <label>Deep model
+          <input name="deep_think_llm" value="gpt-5.4" />
+        </label>
+        <label>Quick model
+          <input name="quick_think_llm" value="gpt-5.4-mini" />
+        </label>
+      </div>
+      <div class="row">
+        <label>Debate rounds
+          <input name="max_debate_rounds" type="number" min="1" max="5" value="1" />
+        </label>
+        <label>Risk discussion rounds
+          <input name="max_risk_discuss_rounds" type="number" min="1" max="5" value="1" />
+        </label>
+      </div>
+      <fieldset>
+        <legend>Analyst team</legend>
+        {% for a in ["market", "social", "news", "fundamentals"] %}
+          <label class="check"><input type="checkbox" name="analysts" value="{{ a }}" checked /> {{ a }}</label>
+        {% endfor %}
+      </fieldset>
+      <button type="submit">Run analysis</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Recent runs</h2>
+    {% if not runs %}
+      <p class="muted">No runs yet. Launch one to the left.</p>
+    {% else %}
+      <table class="runs">
+        <thead>
+          <tr><th>Ticker</th><th>Date</th><th>Status</th><th>Decision</th><th></th></tr>
+        </thead>
+        <tbody>
+          {% for r in runs %}
+            <tr>
+              <td>{{ r.ticker }}</td>
+              <td>{{ r.trade_date }}</td>
+              <td><span class="status status-{{ r.status }}">{{ r.status }}</span></td>
+              <td>{{ r.decision or "—" }}</td>
+              <td><a href="/runs/{{ r.id }}">view</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </section>
+</div>
+
+<section class="card">
+  <h2>Recent decisions <a class="muted-link" href="/decisions">all →</a></h2>
+  {% if not decisions %}
+    <p class="muted">Memory log is empty. Decisions show up here after a run completes.</p>
+  {% else %}
+    <ul class="decisions">
+      {% for d in decisions %}
+        <li>
+          <span class="rating rating-{{ d.rating | lower }}">{{ d.rating }}</span>
+          <strong>{{ d.ticker }}</strong>
+          <span class="muted">{{ d.date }}</span>
+          {% if d.raw %}<span class="ret">raw {{ d.raw }} · alpha {{ d.alpha }} · {{ d.holding }}</span>{% endif %}
+          {% if d.pending %}<span class="muted">(pending outcome)</span>{% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</section>
+{% endblock %}
