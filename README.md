@@ -16,6 +16,8 @@ Skills are split into two top-level categories:
 | [trading-bot](skills/trading/trading-bot) | Build live trading bots against broker / exchange APIs |
 | [options-toolkit](skills/trading/options-toolkit) | Options pricing, Greeks, and multi-leg strategy analysis |
 | [risk-management](skills/trading/risk-management) | Position sizing, portfolio risk, drawdown control |
+| [sentiment-analysis](skills/trading/sentiment-analysis) | Scrape social/news sentiment (Reddit, Twitter, news) and generate trading signals |
+| [trade-journal](skills/trading/trade-journal) | Log trades, tag strategies, compute per-strategy stats, LLM coaching reviews |
 
 ### Apps (`skills/apps/`)
 
