@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Decisions · TradingAgents{% endblock %}
+{% block content %}
+<section class="card">
+  <h2>All decisions</h2>
+  {% if not entries %}
+    <p class="muted">Memory log is empty.</p>
+  {% else %}
+    <table class="decisions-table">
+      <thead>
+        <tr>
+          <th>Date</th><th>Ticker</th><th>Rating</th>
+          <th>Raw return</th><th>Alpha</th><th>Holding</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in entries %}
+          <tr class="dec-row">
+            <td>{{ e.date }}</td>
+            <td><strong>{{ e.ticker }}</strong></td>
+            <td><span class="rating rating-{{ e.rating | lower }}">{{ e.rating }}</span></td>
+            <td>{{ e.raw or "—" }}</td>
+            <td>{{ e.alpha or "—" }}</td>
+            <td>{{ e.holding or ("pending" if e.pending else "—") }}</td>
+          </tr>
+          <tr class="dec-body">
+            <td colspan="6">
+              <details>
+                <summary>decision</summary>
+                <pre>{{ e.decision }}</pre>
+              </details>
+              {% if e.reflection %}
+                <details>
+                  <summary>reflection</summary>
+                  <pre>{{ e.reflection }}</pre>
+                </details>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+</section>
+{% endblock %}

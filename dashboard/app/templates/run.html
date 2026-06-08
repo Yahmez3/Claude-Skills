@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}{{ run.ticker }} · {{ run.trade_date }} · TradingAgents{% endblock %}
+{% block content %}
+<section class="card run-header">
+  <h2>{{ run.ticker }} <span class="muted">· {{ run.trade_date }}</span></h2>
+  <div>
+    <span id="status" class="status status-{{ run.status }}">{{ run.status }}</span>
+    {% if run.decision %}<span class="rating rating-{{ run.decision | lower }}">{{ run.decision }}</span>{% endif %}
+    <span class="muted">id: {{ run.id }}</span>
+  </div>
+  {% if run.error %}<pre class="error">{{ run.error }}</pre>{% endif %}
+</section>
+
+<div class="grid two">
+  <section class="card">
+    <h3>Pipeline</h3>
+    <ol id="pipeline" class="pipeline">
+      <li data-group="analysts" data-node="Market Analyst">Market Analyst</li>
+      <li data-group="analysts" data-node="Social Analyst">Social Analyst</li>
+      <li data-group="analysts" data-node="News Analyst">News Analyst</li>
+      <li data-group="analysts" data-node="Fundamentals Analyst">Fundamentals Analyst</li>
+      <li data-group="researchers" data-node="Bull Researcher">Bull Researcher</li>
+      <li data-group="researchers" data-node="Bear Researcher">Bear Researcher</li>
+      <li data-group="researchers" data-node="Research Manager">Research Manager</li>
+      <li data-group="trader" data-node="Trader">Trader</li>
+      <li data-group="risk" data-node="Aggressive Analyst">Aggressive Analyst</li>
+      <li data-group="risk" data-node="Conservative Analyst">Conservative Analyst</li>
+      <li data-group="risk" data-node="Neutral Analyst">Neutral Analyst</li>
+      <li data-group="risk" data-node="Portfolio Manager">Portfolio Manager</li>
+    </ol>
+  </section>
+
+  <section class="card">
+    <h3>Live event log</h3>
+    <ul id="events" class="events"></ul>
+  </section>
+</div>
+
+<section class="card">
+  <h3>Reports</h3>
+  <div id="reports" class="reports">
+    {% if artifacts %}
+      {% for field in ["market_report", "sentiment_report", "news_report", "fundamentals_report", "investment_plan", "trader_investment_decision", "final_trade_decision"] %}
+        {% if artifacts.get(field) %}
+          <details {% if field == "final_trade_decision" %}open{% endif %} data-field="{{ field }}">
+            <summary>{{ field.replace("_", " ") }}</summary>
+            <pre>{{ artifacts[field] }}</pre>
+          </details>
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      <p class="muted" id="reports-empty">Reports will stream in as each agent completes.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  window.RUN_ID = {{ run.id | tojson }};
+  window.RUN_STATUS = {{ run.status | tojson }};
+</script>
+<script src="{{ url_for('static', path='dashboard.js') }}"></script>
+{% endblock %}
